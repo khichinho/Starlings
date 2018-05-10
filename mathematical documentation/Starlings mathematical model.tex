@@ -1,0 +1,208 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% COP290 Starling Murmuration Report
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass{article}
+
+\usepackage[version=3]{mhchem} % Package for chemical equation typesetting
+\usepackage{siunitx} % Provides the \SI{}{} and \si{} command for typesetting SI units
+\usepackage{graphicx} % Required for the inclusion of images
+\usepackage{natbib} % Required to change bibliography style to APA
+\usepackage{amsmath} % Required for some math elements 
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{algorithm,algpseudocode}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+
+\setlength\parindent{0pt} % Removes all indentation from paragraphs
+
+\renewcommand{\labelenumi}{\alph{enumi}.} % Make numbering in the enumerate environment by letter rather than number (e.g. section 6)
+
+%----------------------------------------------------------------------------------------
+%	DOCUMENT INFORMATION
+%----------------------------------------------------------------------------------------
+
+\title{Starlings \\ Boids Flocking Mathematical Model \\ COP 290} % Title
+
+\author{Hardik Khichi (2016CS50404)} % Author name
+
+\date{May 2018} % Date for the report
+
+\begin{document}
+
+\maketitle % Insert the title, author and date
+
+\tableofcontents
+
+\chapter{(Chapter Name)}
+
+\newpage
+
+%----------------------------------------------------------------------------------------
+%	SECTION 1
+%----------------------------------------------------------------------------------------
+
+\section{Objective}
+
+Murmuration refers to the phenomenon that results when hundreds, sometimes thousands, birds in a flock fly in swooping, intricately coordinated patterns through the sky. Starlings are migratory birds who show this phenomenon very well.
+%----------------------------------------------------------------------------------------
+%	SECTION 2
+%----------------------------------------------------------------------------------------
+
+\section{Boid's Model}
+
+Each Boid has a certain set of properties associated to it -
+
+\begin{itemize}
+    \item \textbf{Position} - (x, y) coordinates 
+    \item \textbf{Velocity} - (v$_{\text{x}}$, v$_{\text{y}}$)
+    \item \textbf{Acceleration} - (a$_{\text{x}}$, a$_{\text{y}}$) 
+    \item \textbf{Boid Size} - Size of boids on canvas
+    \item \textbf{Max Speed} - Limits max Speed of the boids prevent unreal velocities
+    \item \textbf{Max Force} - Limits max force applied on boid to stop extreme cohesion or separation
+\end{itemize}
+
+%----------------------------------------------------------------------------------------
+%	SECTION 3
+%----------------------------------------------------------------------------------------
+
+\section{Boid's Properties}
+These are the set of constraints under which the flocking movement occurs. These properties are only applied on the boids within a certain radius of vicinity.
+
+\subsection{Cohesion}
+
+\vspace{3mm}
+\begin{center}
+\includegraphics{Cohesion.jpg}
+\end{center}
+
+\vspace{3mm}
+Cohesion is the tendency of a boid to remain with its neighbours by moving toward the average position of the group of neighbours.
+Effect of cohesion on velocity of boid can be derived as a component of force towards the centre of position of group as a function of distance of boid from the centre of group of its neighbours
+
+\begin{algorithm}
+\begin{algorithmic}
+\State \textbf{Data} : A boid.
+\State \textbf{Result} : The course of the boid in updated.
+ \State $goal \gets$ $(0,0);$
+ \State $neighbours\gets$ getNeighbors(boid);
+\For{\textbf{each} $nBoid$ $in$ $neighbours$}
+         \State $goal \gets$ $goal$ $+$ $positionOf(nBoid)$   
+        \EndFor 
+           \State $goal \gets$ $goal$ $/$ $neighbours.size();$
+              \State $steerForward(goal, boid);$ 
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Separation}
+
+\vspace{3mm}
+\begin{center}
+\includegraphics{Separation.jpg}
+\end{center}
+
+\vspace{3mm}
+Separation is the tendency of a boid to maintain a particular minimum distance from its neighbours.
+This repulsive force in opposite direction from a body to boid. A body can be another boid or an obstacle. It can be calculated as a function of inverse of the distance between a body and the boid.
+
+\begin{algorithm}
+\begin{algorithmic}
+\State \textbf{Data} : A boid.
+\State \textbf{Result} : The course of the boid in updated.
+ \State $goal \gets$ $(0,0);$
+ \State $neighbours\gets$ getNeighbors(boid);
+\For{\textbf{each} $nBoid$ $in$ $neighbours$}
+         \State $goal \gets$ $goal$ $+$ $positionOf(Boid)$ $-$ $positionOf(nBoid)$   
+        \EndFor 
+           \State $goal \gets$ $goal$ $/$ $neighbours.size();$
+              \State $steerForward(goal, boid);$ 
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Alignment}
+
+\vspace{3mm}
+\begin{center}
+\includegraphics{Alignment.jpg}
+\end{center}
+
+\vspace{3mm}
+Alignment is the tendency of aligning the velocity of a boid with the direction
+of average velocity of the fellow neighbour’s.
+Alignment deciding force for boid can be calculated as a function of angle of
+average velocity of neighbouring boids and velocity of the boid.
+
+\begin{algorithm}
+\begin{algorithmic}
+\State \textbf{Data} : A boid.
+\State \textbf{Result} : The course and velocity of the boid is updated.
+ \State $dCourse \gets$ 0;
+ \State $dVelocity \gets$ 0;
+ \State $neighbors \gets$ getNeighbors(boid);
+\For{\textbf{each} $nBoid$ $in$ $neighbours$}
+         \State $dCourse \gets$ $dCourse$ $+$ $getCourse(nBoid)$ $-$ $getCourse(boid)$
+          \State $dVelocity \gets$ $dVelocity$ $+$ $getVelocity(nBoid)$ $-$ $getVelocity(boid)$
+        \EndFor 
+           \State $dCourse \gets$ $dCourse$ $/$ $neighbours.size();$
+            \State $dVelocity \gets$ $dVelocity$ $/$ $neighbours.size();$
+              \State $boid.addCourse(dCourse)$
+              \State $boid.addVelocity(dVelocity)$
+\end{algorithmic}
+\end{algorithm}
+
+%----------------------------------------------------------------------------------------
+%	SECTION 4
+%----------------------------------------------------------------------------------------
+
+\section{Other Functions used in Program}
+
+\subsection{Display}
+Generates graphics of boid/obstacle to be displayed on canvas.
+\subsection{Run}
+Applies all the properties of boid in one step.
+\subsection{Flock}
+Applies result of force due to above properties to the boid.
+\subsection{Update}
+Maintains movement of boid, changes its velocity and position.
+\subsection{Bounce/ Wrap}
+Allows boids to reflect off the walls or wraparound to the other side. 
+
+
+
+
+%----------------------------------------------------------------------------------------
+%	SECTION 5
+%----------------------------------------------------------------------------------------
+
+\section{Conclusions and Improvements}
+These properties initially theorized by Prof. Craig Reynolds lack in some departments to simulate real life starling behaviour:-
+
+\begin{itemize}
+    \item Starlings only notice their counterparts in front of them rather then all around them. To tackle this problem we should also include field to view into account, allowing them to only interact with boids in a certain degree of angle in front of them. This will allow them to move in V-formation.
+    \item When are boids are moving in an congested environment, they have to interact with a large amount of counterparts. However if we limit this to a certain amount of boids, their movement would be more fluid.
+\end{itemize}
+
+
+%----------------------------------------------------------------------------------------
+%	BIBLIOGRAPHY
+%----------------------------------------------------------------------------------------
+
+\bibliographystyle{apalike}
+
+\bibliography{sample}
+\item
+  Craig W. Reynolds. Flocks, herds, and schools: A distributed behavioral model.
+In \textit{Computer Graphics}.
+\item
+F. Heppner and U. Grenander. A stochastic nonlinear model for coordinated
+bird flocks. 1990.
+%----------------------------------------------------------------------------------------
+
+\end{document}
