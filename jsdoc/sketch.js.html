@@ -1,16 +1,44 @@
-/** @constant */
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: sketch.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: sketch.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/** @constant */
 /**  number of boids in the start*/ 
 var startingboids = 250;
 var boidsize =3; 
 
 /**Seperation property coefficient*/
-var seperationcoeff = 1.5;
+var seperationcoeff = 1;
 /**Alignment property coefficient*/
 var alignmentcoeff = 1;
 /**Cohesion property coefficient*/
 var cohesioncoeff = 1;
 /**Deflection from obstacle coefficient*/
-var deflectioncoeff =1.5;
+var deflectioncoeff =1;
 /**Predator coefficient*/
 var predatorcoeff = 8;
 
@@ -33,7 +61,7 @@ p5.disableFriendlyErrors = true;
 function setup() {
 	createCanvas(windowWidth,windowHeight);
 	// Initially puts some amount of boids in the system
-	for (var i = 0; i < startingboids; i++) {
+	for (var i = 0; i &lt; startingboids; i++) {
 		//var b = new Boid(random(0,width),random(0,height));
 		var b = new Boid(random(0,width),random(0,height));
 		boids.push(b);
@@ -42,13 +70,13 @@ function setup() {
 
 function draw() {
 	background(0);
-	for (var i = 0; i < boids.length; i++) {
+	for (var i = 0; i &lt; boids.length; i++) {
     	boids[i].run(boids);
 	}
-	for (var j = 0; j < deflectors.length; j++) {
+	for (var j = 0; j &lt; deflectors.length; j++) {
     	deflectors[j].display();
 	}
-	for (var k = 0; k < predators.length; k++) {
+	for (var k = 0; k &lt; predators.length; k++) {
 		predators[k].display();
 		predators[k].movement();
 		predators[k].bounce();
@@ -127,17 +155,17 @@ Predator.prototype.movement = function() {
 /**@function */
 /**makes predator to bounce off walls*/
 Predator.prototype.bounce = function(){
-    if(this.position.x < 0 || this.position.x > width){this.velocity.x *= -1;}
-    if(this.position.y < 0 || this.position.y > height){this.velocity.y *= -1;}
+    if(this.position.x &lt; 0 || this.position.x > width){this.velocity.x *= -1;}
+    if(this.position.y &lt; 0 || this.position.y > height){this.velocity.y *= -1;}
 }
 
 /**@class Boid Class */
 function Boid(x,y) {
 	this.acceleration = createVector(0,0);
-	this.velocity = createVector(random(-2.5,2.5),random(-2.5,2.5));
+	this.velocity = createVector(random(-5,5),random(-5,5));
 	this.position = createVector(x,y);
 	this.s = boidsize;
-	this.maxspeed = 2.5;
+	this.maxspeed = 5;
 	this.maxforce = 0.05;
 }
 /**@function */
@@ -206,8 +234,8 @@ Boid.prototype.display = function() {
 /**@function */
 /**makes boids to wraparound off walls */
 Boid.prototype.wrap = function() {
-	if (this.position.x < -this.s)  this.position.x = width +this.s;
-	if (this.position.y < -this.s)  this.position.y = height+this.s;
+	if (this.position.x &lt; -this.s)  this.position.x = width +this.s;
+	if (this.position.y &lt; -this.s)  this.position.y = height+this.s;
 	if (this.position.x > width +this.s) this.position.x = -this.s;
 	if (this.position.y > height+this.s) this.position.y = -this.s;
 };
@@ -215,8 +243,8 @@ Boid.prototype.wrap = function() {
 /**@function */
 /**makes boids to bounce off walls */
 Boid.prototype.bounce = function(){
-    if(this.position.x < 0 || this.position.x > width){this.velocity.x *= -1;}
-    if(this.position.y < 0 || this.position.y > height){this.velocity.y *= -1;}
+    if(this.position.x &lt; 0 || this.position.x > width){this.velocity.x *= -1;}
+    if(this.position.y &lt; 0 || this.position.y > height){this.velocity.y *= -1;}
 }
 
 /**@function */
@@ -225,9 +253,9 @@ Boid.prototype.separate = function(boids) {
 	var steer = createVector(0,0);
 	var count = 0;
 	// Apply property on nearby boids only
-	for (var i = 0; i < boids.length; i++) {
+	for (var i = 0; i &lt; boids.length; i++) {
 		var d = p5.Vector.dist(this.position,boids[i].position);
-    	if ((d > 0) && (d < minimumdistance)) {
+    	if ((d > 0) &amp;&amp; (d &lt; minimumdistance)) {
 			// Calculate vector pointing away from neighbor
     		var diff = p5.Vector.sub(this.position,boids[i].position);
 			diff.normalize();
@@ -255,10 +283,10 @@ Boid.prototype.deflect = function(deflectors) {
 	var steer = createVector(0,0);
 	var count = 0;
 	// Apply property on nearby deflectors only
-	for (var i = 0; i < deflectors.length; i++) {
+	for (var i = 0; i &lt; deflectors.length; i++) {
 		var d = p5.Vector.dist(this.position,deflectors[i].position);
 		
-    	if ((d > 0) && (d < minimumdistance*2)) {
+    	if ((d > 0) &amp;&amp; (d &lt; minimumdistance*2)) {
 			// Calculate vector pointing away from neighbor
     		var diff = p5.Vector.sub(this.position,deflectors[i].position);
 			diff.normalize();
@@ -286,10 +314,10 @@ Boid.prototype.pred = function(predators) {
 	var steer = createVector(0,0);
 	var count = 0;
 	// Apply property on nearby deflectors only
-	for (var i = 0; i < predators.length; i++) {
+	for (var i = 0; i &lt; predators.length; i++) {
 		var d = p5.Vector.dist(this.position,predators[i].position);
 		
-    	if ((d > 0) && (d < minimumdistance*1.5)) {
+    	if ((d > 0) &amp;&amp; (d &lt; minimumdistance*1.5)) {
 			// Calculate vector pointing away from neighbor
     		var diff = p5.Vector.sub(this.position,predators[i].position);
 			diff.normalize();
@@ -316,9 +344,9 @@ Boid.prototype.pred = function(predators) {
 Boid.prototype.align = function(boids) {
 	var vsum = createVector(0,0);
 	var count = 0;
-	for (var i = 0; i < boids.length; i++) {
+	for (var i = 0; i &lt; boids.length; i++) {
     	var d = p5.Vector.dist(this.position,boids[i].position);
-    	if ((d > 0) && (d < nearbydistance)) {
+    	if ((d > 0) &amp;&amp; (d &lt; nearbydistance)) {
 			vsum.add(boids[i].velocity);
 			count++;
     	}
@@ -352,9 +380,9 @@ Boid.prototype.cohesion = function(boids) {
 	var nearbydistance = 50;
 	var psum = createVector(0,0); 
 	var count = 0;
-	for (var i = 0; i < boids.length; i++) {
+	for (var i = 0; i &lt; boids.length; i++) {
     	var d = p5.Vector.dist(this.position,boids[i].position);
-    	if ((d > 0) && (d < nearbydistance)) {
+    	if ((d > 0) &amp;&amp; (d &lt; nearbydistance)) {
 			psum.add(boids[i].position); // Add location
 			count++;
     	}
@@ -365,3 +393,26 @@ Boid.prototype.cohesion = function(boids) {
 	}
 	else { return createVector(0,0);}
 };
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-sketch.html">sketch</a></li></ul><h3>Classes</h3><ul><li><a href="module-sketch-Boid.html">Boid</a></li><li><a href="module-sketch-Deflector.html">Deflector</a></li><li><a href="module-sketch-Predator.html">Predator</a></li></ul><h3>Global</h3><ul><li><a href="global.html#alignmentcoeff">alignmentcoeff</a></li><li><a href="global.html#cohesioncoeff">cohesioncoeff</a></li><li><a href="global.html#deflectioncoeff">deflectioncoeff</a></li><li><a href="global.html#minimumdistance">minimumdistance</a></li><li><a href="global.html#nearbydistance">nearbydistance</a></li><li><a href="global.html#predatorcoeff">predatorcoeff</a></li><li><a href="global.html#seperationcoeff">seperationcoeff</a></li><li><a href="global.html#startingboids">startingboids</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri May 11 2018 16:19:44 GMT+0530 (IST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
