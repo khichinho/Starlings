@@ -37,7 +37,7 @@ Each Boid **steers towards the average heading of local flockmates** to keep mov
 
 Clone the repository and open index.html file. Click on screen to introduce a new obstace, drag to introduce new boids.
 
-## Contributing Members
+## Contributers
 
 - Hardik Khichi (2016CS50404)
 
