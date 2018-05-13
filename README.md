@@ -40,5 +40,5 @@ Clone the repository and open index.html file. Click on screen to introduce a ne
 ## Contributing Members
 
 - Hardik Khichi (2016CS50404)
-- Yash Malviya (2016CS50403)
+
 
